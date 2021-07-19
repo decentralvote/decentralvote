@@ -3,7 +3,7 @@ pragma solidity ^0.8.4;
 
 import "./IPoll.sol";
 
-abstract contract BasePoll is IPoll {
+abstract contract BasePollBound is IPoll {
     struct Proposal {
         uint256 voteCount;
         uint256 voteWeight;
@@ -36,6 +36,11 @@ abstract contract BasePoll is IPoll {
 
     modifier isPollStarted() {
         require(hasPollStarted(), "Poll hasn't started");
+        _;
+    }
+
+    modifier checkTime() {
+        require(isPollValid(), "Poll hasn't started or has ended");
         _;
     }
 
@@ -89,6 +94,14 @@ abstract contract BasePoll is IPoll {
 
     function getEndTime() external override view returns (uint256) {
         return endTime;
+    }
+
+    function isPollValid() public view returns (bool) {
+        return (block.timestamp >= startTime && block.timestamp <= endTime);
+    }
+
+    function hasPollEnded() public view returns (bool) {
+        return (block.timestamp > endTime);
     }
 
     function getProposals() external override view returns (bytes32[] memory) {
