@@ -3,9 +3,9 @@ pragma solidity ^0.8.4;
 
 import "hardhat/console.sol";
 
-import "./OnePersonOneVote.sol";
+import "./OnePersonOneVoteBound.sol";
 
-contract DecentralPoll is OnePersonOneVote {
+contract DecentralPoll is OnePersonOneVoteBound {
     constructor(
         address[] memory _protocolAddresses,
         bytes32[] memory _proposalNames,
@@ -15,7 +15,7 @@ contract DecentralPoll is OnePersonOneVote {
         uint256 _startTime,
         uint256 _duration
     )
-        OnePersonOneVote(
+        OnePersonOneVoteBound(
             _protocolAddresses,
             _proposalNames,
             _voterBaseLogic,

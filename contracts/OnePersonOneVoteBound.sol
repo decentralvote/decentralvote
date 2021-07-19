@@ -1,10 +1,9 @@
 //SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.4;
 
-import "./BasePoll.sol";
+import "./BasePollBound.sol";
 
-//these poll contracts are independent. Hence, protocol must be passed as a ctor parameter
-abstract contract OnePersonOneVote is BasePoll {
+abstract contract OnePersonOneVoteBound is BasePollBound {
     constructor(
         address[] memory _protocolAddresses,
         bytes32[] memory _proposalNames,
@@ -14,7 +13,7 @@ abstract contract OnePersonOneVote is BasePoll {
         uint256 _startTime,
         uint256 _duration
     )
-        BasePoll(
+        BasePollBound(
             _protocolAddresses,
             _proposalNames,
             _voterBaseLogic,
@@ -25,7 +24,7 @@ abstract contract OnePersonOneVote is BasePoll {
         )
     {}
 
-    function vote(uint8 _proposal) external override isPollStarted {
+    function vote(uint8 _proposal) external override checkTime {
         Voter storage sender = voters[msg.sender];
         uint256 voteWeight = calculateVoteWeight(msg.sender);
 
@@ -43,7 +42,7 @@ abstract contract OnePersonOneVote is BasePoll {
         }
     }
 
-    function revokeVote() external override isValidVoter {
+    function revokeVote() external override isValidVoter checkTime {
         Voter storage sender = voters[msg.sender];
         require(sender.voted, "Hasn't yet voted.");
         uint8 votedProposal = sender.vote;

@@ -3,20 +3,18 @@ const { expect } = require("chai");
 describe("DecentralPoll", function () {
   it("Should return the new greeting once it's changed", async function () {
 
-    // Provider and utils example
+    // Constants
+    const zero = ethers.constants.Zero;
+    const one = ethers.constants.One;
+    const arrayofTwoZeros = [
+      zero,
+      zero
+    ];
+    const pollHasntStarted = "Poll hasn't started";
+    const hasntVotedYet = "Hasn't yet voted.";
 
-    // let bal = await ethers.provider.getBalance(EtherGameContract.address);
-    // expect(ethers.utils.formatEther(bal)).to.equal("1.0");
-
-    // Args
-
-    // address[] _protocolAddresses,
-    // bytes32[] _proposalNames,
-    // bytes32 _voterBaseLogic,
-    // bytes32 _pollName,
-    // bytes32 _pollType,
-    // uint _startTime,
-    // uint _duration
+    // Get Signers
+    const [owner, secondAddress] = await ethers.getSigners();
 
     // Membership Protocol Addresses
     const protocolAddresses = [];
@@ -38,10 +36,10 @@ describe("DecentralPoll", function () {
 
     // Start Time
     const presentTime = (await ethers.provider.getBlock()).timestamp;
-    const startTime = presentTime + 1000;
+    const startTime = presentTime + 3;
 
     // Duration
-    const duration = 1000000;
+    const duration = 1000;
 
     // console.log(
     //   "To bytes (Hello World):",
@@ -81,6 +79,7 @@ describe("DecentralPoll", function () {
     //   )
     // );
 
+    // Deploy the contract
     const DecentralPollContract = await ethers.getContractFactory("DecentralPoll");
 
     const DecentralPoll = await DecentralPollContract.deploy(
@@ -95,11 +94,61 @@ describe("DecentralPoll", function () {
     
     await DecentralPoll.deployed();
 
-    // console.log(DecentralPoll);
+    // Verify the various properties from construction
+    expect(await DecentralPoll.getProposals()).to.deep.equal(proposalNames);
+    expect(await DecentralPoll.getVoterBaseLogic()).to.equal(voterBaseLogic);
+    expect(await DecentralPoll.getName()).to.equal(pollName);
+    expect(await DecentralPoll.getPollType()).to.equal(pollType);
+    expect(await DecentralPoll.getStartTime()).to.equal(startTime);
+    expect(await DecentralPoll.getEndTime()).to.equal(startTime + duration);
 
-    
+    // Verify any user is valid voter with protocol-less allowance in contract
+    expect(await DecentralPoll.canVote(owner.address)).to.equal(true);
+    expect(await DecentralPoll.canVote(secondAddress.address)).to.equal(true);
 
-    expect(await DecentralPoll.pollName()).to.equal(pollName);
+    // Verify poll has not started
+    expect(await DecentralPoll.hasPollStarted()).to.equal(false);
+
+    // Verify empty vote tally
+    expect(await DecentralPoll.getVoteTallies()).to.deep.equal(arrayofTwoZeros);
+
+    // Verify zero voter count
+    expect(await DecentralPoll.getVoterCounts()).to.deep.equal(arrayofTwoZeros);
+
+    // Verify zero voter count
+    expect(await DecentralPoll.getVoterCounts()).to.deep.equal(arrayofTwoZeros);
+
+    // Try to vote and expect revert
+    await expect(DecentralPoll.vote(zero)).to.be.revertedWith(pollHasntStarted);
+
+    // Try to revoke vote and expect revert
+    await expect(DecentralPoll.revokeVote()).to.be.revertedWith(hasntVotedYet);
+
+    // Verify poll has not started
+    expect(await DecentralPoll.hasPollStarted()).to.equal(true);
+
+    // Vote for first proposal and verify cast vote event
+    await expect(DecentralPoll.vote(zero))
+      .to.emit(DecentralPoll, 'CastVote')
+      .withArgs(owner.address, zero, one);
+
+    // Verify new voter count
+    expect(await DecentralPoll.getVoterCount(zero)).to.deep.equal(one);
+    expect(await DecentralPoll.getVoterCount(one)).to.deep.equal(zero);
+
+    // Verify winning proposal
+    expect(await DecentralPoll.winningProposal()).to.deep.equal(zero);
+
+    // Try to vote again and verify tried to vote event
+    await DecentralPoll.vote(zero);
+    await expect(DecentralPoll.vote(zero))
+      .to.emit(DecentralPoll, 'TriedToVote')
+      .withArgs(owner.address, zero, one);
+
+    // Still same vote total
+    expect(await DecentralPoll.getVoterCount(zero)).to.deep.equal(one);
+
+    // expect(await DecentralPoll.getVoterCount(zero)).to.deep.equal(one);
 
     // const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
 
