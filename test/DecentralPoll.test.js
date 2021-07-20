@@ -115,9 +115,6 @@ describe("DecentralPoll", function () {
     // Verify zero voter count
     expect(await DecentralPoll.getVoterCounts()).to.deep.equal(arrayofTwoZeros);
 
-    // Verify zero voter count
-    expect(await DecentralPoll.getVoterCounts()).to.deep.equal(arrayofTwoZeros);
-
     // Try to vote and expect revert
     await expect(DecentralPoll.vote(zero)).to.be.revertedWith(pollHasntStarted);
 
