@@ -2,9 +2,6 @@ import { useState } from 'react';
 import { ethers } from 'ethers';
 import DecentralPollContract from './artifacts/contracts/DecentralPoll.sol/DecentralPoll.json';
 
-// Update with the contract address logged out to the CLI when it was deployed 
-const pollAddress = '0x0165878A594ca255338adfa4d48449f69242Eb8F';
-
 function DecentralPoll() {
   // store greeting in local state
   const [
@@ -17,6 +14,11 @@ function DecentralPoll() {
     endTime: "",
     hasPollEnded: false
   });
+
+  const [
+    pollAddress,
+    setPollAddress,
+  ] = useState("");
   
 
   async function fetchPoll() {
@@ -65,6 +67,9 @@ function DecentralPoll() {
   return (
     <div className="DecentralPoll" style={{border: '1px solid black'}}>
       <h2>Demo Poll</h2>
+      <label htmlFor="contact-address">Poll Address:</label>
+      <input id="contact-address" size="50" value={pollAddress} onChange={e => setPollAddress(e.target.value)} placeholder="Set Poll Address" />
+      <br />
       <button onClick={fetchPoll}>Fetch Poll</button>
       <h3>Poll Name: {pollInstance.pollName}</h3>
       <h3>Poll Proposals:</h3>
