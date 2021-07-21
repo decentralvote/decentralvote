@@ -2,6 +2,10 @@
 
 Decentralized voting on Ethereum
 
+* Poll contracts are based on Draft [EIP-1417](https://eips.ethereum.org/EIPS/eip-1417)
+* UI built with React
+* Chain development with HardHat
+
 ## Why decentralized voting?
 
 People should have control over their vote and have faith in any given election. This tenet of freedom is at the heart of democracy, and our most advanced technologies should empower us to have more free and fair elections.
@@ -28,4 +32,16 @@ yarn test
 
 ```
 npx hardhat test
+```
+
+### Run local chain
+
+```
+npx hardhat node
+```
+
+### Deploy to Surge
+
+```
+yarn surge
 ```
