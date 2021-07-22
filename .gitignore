@@ -24,9 +24,19 @@ yarn-error.log*
 
 node_modules
 
-#Hardhat files
+# Hardhat files
 cache
 artifacts
 
 # Surge
 CNAME
+
+# dotenv
+.env
+
+# Jetbrains
+.idea
+
+# yarn
+.yarn
+.yarnrc
