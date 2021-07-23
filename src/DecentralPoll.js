@@ -27,7 +27,7 @@ function DecentralPoll() {
     selectedVote,
     setSelectedVote,
   ] = useState(null);
-  
+
 
   async function fetchPoll() {
     if (typeof window.ethereum !== 'undefined') {
@@ -60,7 +60,7 @@ function DecentralPoll() {
       } catch (err) {
         console.log("Error: ", err);
       }
-    }    
+    }
   }
 
   // request access to the user's MetaMask account
@@ -84,16 +84,16 @@ function DecentralPoll() {
       }
     }
   }
-  
+
   function ProposalList(props) {
     const proposals = props.proposals;
     return proposals.map((proposal, index) =>
       <label style={{display: 'block'}}>
-        <input 
-          name="proposal" 
-          type="radio" 
+        <input
+          name="proposal"
+          type="radio"
           value={index}
-          checked={index == selectedVote} 
+          checked={index == selectedVote}
           onChange={e => setSelectedVote(e.target.value)} />
           {ethers.utils.parseBytes32String(proposal)}
         </label>
@@ -124,11 +124,11 @@ function DecentralPoll() {
       <h3>End Time: {pollInstance.endTime.toString()}</h3>
       <h3>Now: {new Date().toString()}</h3>
       <h3>
-        Has Started? 
+        Has Started?
         {pollInstance.hasPollStarted ? " Yes" : " No"}
       </h3>
       <h3>
-        Has Ended? 
+        Has Ended?
         {pollInstance.hasPollEnded ? " Yes" : " No"}
       </h3>
       <h3>Can Vote: {pollInstance.canVote ? " Yes" : " No"}</h3>

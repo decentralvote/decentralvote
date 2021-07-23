@@ -31,13 +31,19 @@ yarn test
 ### Testing Contracts
 
 ```
-npx hardhat test
+yarn sol:test
+```
+
+### Linting Contracts
+
+```
+yarn sol:check
 ```
 
 ### Run local chain
 
 ```
-npx hardhat node
+yarn chain
 ```
 
 ### Deploy to Surge
