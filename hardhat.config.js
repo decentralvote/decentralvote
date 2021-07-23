@@ -1,5 +1,6 @@
 require('dotenv').config();
 require("@nomiclabs/hardhat-waffle");
+
 const { ALCHEMY_API_KEY_ROPSTEN, ALCHEMY_API_KEY_RINKEBY, PRIVATE_KEY } = process.env;
 
 /**

@@ -4,6 +4,7 @@ pragma solidity ^0.8.4;
 import "./BasePollBound.sol";
 
 abstract contract OnePersonOneVoteBound is BasePollBound {
+    /* solhint-disable no-empty-blocks */
     constructor(
         address[] memory _protocolAddresses,
         bytes32[] memory _proposalNames,
@@ -23,6 +24,7 @@ abstract contract OnePersonOneVoteBound is BasePollBound {
             _duration
         )
     {}
+    /* solhint-enable no-empty-blocks */
 
     function vote(uint8 _proposal) external override checkTime {
         Voter storage sender = voters[msg.sender];

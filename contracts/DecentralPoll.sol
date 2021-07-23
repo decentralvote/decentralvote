@@ -6,6 +6,7 @@ import "hardhat/console.sol";
 import "./OnePersonOneVoteBound.sol";
 
 contract DecentralPoll is OnePersonOneVoteBound {
+    /* solhint-disable no-empty-blocks */
     constructor(
         address[] memory _protocolAddresses,
         bytes32[] memory _proposalNames,
@@ -25,8 +26,10 @@ contract DecentralPoll is OnePersonOneVoteBound {
             _duration
         )
     {}
+    /* solhint-enable no-empty-blocks */
 
     function canVote(address _to) public override pure returns (bool) {
+        _to;
         return true;
 
         // IERC1261 contract1 = IERC1261(protocolAddresses[0]);
@@ -37,22 +40,8 @@ contract DecentralPoll is OnePersonOneVoteBound {
         // );
     }
 
-    function getVoterBaseDenominator() public override view returns (uint256) {
-        uint256 totalMemberCount = 100;
+    function getVoterBaseDenominator() public override pure returns (uint256) {
+        uint256 totalMemberCount = 1;
         return totalMemberCount;
-
-        // uint totalMemberCount = 0;
-        // if (proposals.length <= 1) {
-        //     for (uint i = 0; i < protocolAddresses.length; i++) {
-        //         IERC1261 instance = IERC1261(protocolAddresses[i]);
-        //         totalMemberCount += instance.getCurrentMemberCount();
-        //     }
-        //     return totalMemberCount;
-        // }
-        // uint proposalWeight = 0;
-        // for (uint8 index = 0; index < proposals.length; index++) {
-        //     proposalWeight += proposals[index].voteWeight;
-        // }
-        // return proposalWeight;
     }
 }

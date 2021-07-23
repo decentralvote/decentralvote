@@ -16,15 +16,19 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-scripts": "4.0.3",
+    "solhint": "^3.3.6",
     "surge": "^0.23.0",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test-ui": "react-scripts test",
     "eject": "react-scripts eject",
-    "surge": "cp build/index.html build/200.html && surge ./build dev.decentral.vote"
+    "surge": "cp build/index.html build/200.html && surge ./build dev.decentral.vote",
+    "sol:check": "solhint 'contracts/**/*.sol'",
+    "sol:test": "npx hardhat test",
+    "chain": "npx hardhat node"
   },
   "eslintConfig": {
     "extends": [

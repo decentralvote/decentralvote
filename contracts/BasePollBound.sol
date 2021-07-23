@@ -72,27 +72,32 @@ abstract contract BasePollBound is IPoll {
         }
     }
 
-    function getName() external override view returns (bytes32) {
+    function getName() external view override returns (bytes32) {
         return pollName;
     }
 
-    function getPollType() external override view returns (bytes32) {
+    function getPollType() external view override returns (bytes32) {
         return pollType;
     }
 
-    function getVoterBaseLogic() external override view returns (bytes32) {
+    function getVoterBaseLogic() external view override returns (bytes32) {
         return voterBaseLogic;
     }
 
-    function getProtocolAddresses() external override view returns (address[] memory) {
+    function getProtocolAddresses()
+        external
+        view
+        override
+        returns (address[] memory)
+    {
         return protocolAddresses;
     }
 
-    function getStartTime() external override view returns (uint256) {
+    function getStartTime() external view override returns (uint256) {
         return startTime;
     }
 
-    function getEndTime() external override view returns (uint256) {
+    function getEndTime() external view override returns (uint256) {
         return endTime;
     }
 
@@ -104,7 +109,7 @@ abstract contract BasePollBound is IPoll {
         return (block.timestamp > endTime);
     }
 
-    function getProposals() external override view returns (bytes32[] memory) {
+    function getProposals() external view override returns (bytes32[] memory) {
         bytes32[] memory proposalNames = new bytes32[](proposals.length);
         for (uint8 index = 0; index < proposals.length; index++) {
             proposalNames[index] = (proposals[index].name);
@@ -112,11 +117,21 @@ abstract contract BasePollBound is IPoll {
         return proposalNames;
     }
 
-    function getVoteTally(uint256 _proposalId) external override view returns (uint256) {
+    function getVoteTally(uint256 _proposalId)
+        external
+        view
+        override
+        returns (uint256)
+    {
         return proposals[_proposalId].voteWeight;
     }
 
-    function getVoteTallies() external override view returns (uint256[] memory) {
+    function getVoteTallies()
+        external
+        view
+        override
+        returns (uint256[] memory)
+    {
         uint256[] memory proposalWeights = new uint256[](proposals.length);
         for (uint8 index = 0; index < proposals.length; index++) {
             proposalWeights[index] = proposals[index].voteWeight;
@@ -126,14 +141,19 @@ abstract contract BasePollBound is IPoll {
 
     function getVoterCount(uint256 _proposalId)
         external
-        override 
         view
+        override
         returns (uint256)
     {
         return proposals[_proposalId].voteCount;
     }
 
-    function getVoterCounts() external override view returns (uint256[] memory) {
+    function getVoterCounts()
+        external
+        view
+        override
+        returns (uint256[] memory)
+    {
         uint256[] memory proposalCounts = new uint256[](proposals.length);
         for (uint8 index = 0; index < proposals.length; index++) {
             proposalCounts[index] = proposals[index].voteCount;
@@ -141,7 +161,7 @@ abstract contract BasePollBound is IPoll {
         return proposalCounts;
     }
 
-    function winningProposal() external override view returns (uint8) {
+    function winningProposal() external view override returns (uint8) {
         uint8 winningProposalIndex = 0;
         uint256 winningVoteCount = 0;
         for (uint8 p = 0; p < proposals.length; p++) {
@@ -166,9 +186,19 @@ abstract contract BasePollBound is IPoll {
     //IERC1261 contract3 = IERC1261(protocolAddresses[2]);
     //&& contract2.isCurrentMember(_to) && (contract3.getAttributeByName(_to, 'Country') == 'India')
     //return contract1.isCurrentMember(_to);
-    function canVote(address _to) virtual override public view returns (bool);
+    function canVote(address _to) public view virtual override returns (bool);
 
-    function calculateVoteWeight(address _to) virtual override public view returns (uint256);
+    function calculateVoteWeight(address _to)
+        public
+        view
+        virtual
+        override
+        returns (uint256);
 
-    function getVoterBaseDenominator() virtual override public view returns (uint256);
+    function getVoterBaseDenominator()
+        public
+        view
+        virtual
+        override
+        returns (uint256);
 }
