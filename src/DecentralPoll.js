@@ -93,7 +93,7 @@ function DecentralPoll() {
           name="proposal"
           type="radio"
           value={index}
-          checked={index == selectedVote}
+          checked={index === selectedVote}
           onChange={e => setSelectedVote(e.target.value)} />
           {ethers.utils.parseBytes32String(proposal)}
         </label>
