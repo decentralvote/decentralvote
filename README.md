@@ -48,8 +48,13 @@ yarn sol:check
 yarn chain
 ```
 
-### Deploy to Surge
+### Deploy with Surge
 
 ```
-yarn surge
+yarn surge:dev
 ```
+
+```
+yarn surge:prod
+```
+

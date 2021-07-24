@@ -25,7 +25,8 @@
     "build": "react-scripts build",
     "test-ui": "react-scripts test",
     "eject": "react-scripts eject",
-    "surge": "cp build/index.html build/200.html && surge ./build dev.decentral.vote",
+    "surge-dev": "cp build/index.html build/200.html && surge ./build dev.decentral.vote",
+    "surge-prod": "cp build/index.html build/200.html && surge --domain https://decentral.vote ./build decentral.vote",
     "sol:check": "solhint 'contracts/**/*.sol'",
     "sol:test": "npx hardhat test",
     "chain": "npx hardhat node"
