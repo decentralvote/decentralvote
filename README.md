@@ -1,6 +1,8 @@
-# Decentral.vote
+# ✓ decentralvote
 
 Decentralized voting on Ethereum
+
+🔗 https://decentral.vote
 
 * Poll contracts are based on Draft [EIP-1417](https://eips.ethereum.org/EIPS/eip-1417)
 * UI built with React
@@ -8,7 +10,7 @@ Decentralized voting on Ethereum
 
 ## Why decentralized voting?
 
-People should have control over their vote and have faith in any given election. This tenet of freedom is at the heart of democracy, and our most advanced technologies should empower us to have more free and fair elections.
+People should have control over their vote and have faith in any given election. This expectation is at heart of democracy, and our most advanced technologies should empower us to have free and fair elections.
 
 A public blockchain, uncensored and uncontrolled by a central authority, is such a technology.
 
