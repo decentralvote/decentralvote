@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import React from 'react';
 import { ethers } from 'ethers';
-import DecentralPollContract from '../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json';
 import VoteCounts from './VoteCounts';
 import PollLookup from './PollLookup';
 import { makeStyles } from '@material-ui/core/styles';
@@ -57,8 +56,7 @@ function Vote() {
   ] = useState(null);
 
   const [
-    pollInstance,
-    setPollInstance,
+    pollInstance
   ] = useState({
     pollName: "",
     proposals: [],
@@ -139,16 +137,16 @@ function Vote() {
     //   }
     // }
 
-    let instanceData = {
-      pollName: "name",
-      proposals: [],
-      startTime: "123",
-      endTime: "123",
-      hasPollStarted: true,
-      hasPollEnded: false,
-      canVote: false,
-      voterCounts: []
-    };
+    // let instanceData = {
+    //   pollName: "name",
+    //   proposals: [],
+    //   startTime: "123",
+    //   endTime: "123",
+    //   hasPollStarted: true,
+    //   hasPollEnded: false,
+    //   canVote: false,
+    //   voterCounts: []
+    // };
 
   }
 
@@ -267,6 +265,7 @@ function Vote() {
         ) : (
           <>
               {getStepContent(activeStep)}
+              {details}
             <BottomButtons />
           </>
         )}
