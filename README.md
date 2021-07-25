@@ -22,6 +22,7 @@ This platform intends to demonstrate a path towards better elections for voters 
 
 ```
 yarn install
+cp .env.example .env
 ```
 
 ### Testing UI
