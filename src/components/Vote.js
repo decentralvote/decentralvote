@@ -95,9 +95,9 @@ function Vote() {
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <PollLookup pollAddress={pollAddress} onAddressChange={setPollAddress}/>;
+        return <PollLookup onLookup={setPollAddress}/>;
       case 1:
-        return <p>{pollInstance.pollName}</p>;
+        return <p>{pollAddress}</p>;
       case 2:
         return <p>Step 3</p>;
       default:
