@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import Vote from './components/Vote';
+import Wallet from './components/Wallet';
 import Copyright from './components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -12,6 +13,10 @@ import Typography from '@material-ui/core/Typography';
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
+  },
+  title: {
+    flexGrow: 1,
+    fontWeight: 900
   },
   layout: {
     width: 'auto',
@@ -52,11 +57,12 @@ function App() {
   return (
     <React.Fragment>
       <CssBaseline />
-      <AppBar position="absolute" color="default" className={classes.appBar}>
+      <AppBar position="absolute" color="transparent" className={classes.appBar} elevation={0}>
         <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            decentralvote
+          <Typography variant="h6" color="inherit" noWrap className={classes.title}>
+          ✓ decentralvote
           </Typography>
+          <Wallet />
         </Toolbar>
       </AppBar>
       <main className={classes.layout}>
