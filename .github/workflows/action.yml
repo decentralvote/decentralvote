@@ -31,3 +31,4 @@ jobs:
     - run: yarn sol:check
     - run: yarn sol:test
     - run: yarn build
+    - run: yarn test

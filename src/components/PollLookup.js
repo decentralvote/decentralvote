@@ -13,8 +13,8 @@ function PollLookup(props) {
             id="poll-address"
             name="poll-address"
             label="Set Poll Address"
-            value={props.pollAddress}
             fullWidth
+            onChange={e => props.onLookup(e.target.value)}
           />
         </Grid>
       </Grid>
