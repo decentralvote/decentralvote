@@ -8,8 +8,6 @@ import {makeStyles} from "@material-ui/core/styles";
 
 
 const useStyles = makeStyles((theme) => ({
-
-
   buttons: {
     display: 'flex',
     justifyContent: 'flex-end',
@@ -33,14 +31,13 @@ function PollLookup(props) {
 
   // request access to the user's MetaMask account
   async function fetchPoll(address) {
-
     if (typeof window.ethereum !== 'undefined') {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const pollContract = new ethers.Contract(address, DecentralPollContract.abi, provider);
       try {
         let pollName = ethers.utils.parseBytes32String(await pollContract.getName());
-        let props = await pollContract.getProposals();
+        let proposals = await pollContract.getProposals();
         let startTime = new Date((await pollContract.getStartTime()).toNumber()*1000);
         let endTime = new Date((await pollContract.getEndTime()).toNumber()*1000);
         let hasPollStarted = await pollContract.hasPollStarted();
@@ -50,7 +47,7 @@ function PollLookup(props) {
         let instanceData = {
           address: pollAddress,
           pollName: pollName,
-          proposals: props,
+          proposals: proposals,
           startTime: startTime,
           endTime: endTime,
           hasPollStarted: hasPollStarted,
@@ -90,6 +87,7 @@ function PollLookup(props) {
         <Button
                 variant="contained"
                 color="primary"
+                label="submit button"
                 onClick={handleNext}
                 className={classes.button}
               >
