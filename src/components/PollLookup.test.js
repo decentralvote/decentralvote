@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import PollLookup from './PollLookup';
+import {wait} from "@testing-library/user-event/dist/utils";
 
 
 const setPollInstance = jest.fn();
@@ -27,7 +28,7 @@ test('sets poll address', () => {
   expect(inputElement.value).toBe(testValue);
 });
 
-test('lifts state up to parent', () => {
+test('lifts state up to parent', async () => {
   window.ethereum = {request: function(){}};
   render(<PollLookup onLookup={setPollInstance} onNext={handleNext} />);
 
@@ -39,7 +40,7 @@ test('lifts state up to parent', () => {
   expect(inputElement.value).toBe(testValue);
   fireEvent.click(button);
 
-  expect(setPollInstance).toBeCalledTimes(1);
-  expect(setPollInstance).toHaveBeenCalledWith(testValue);
+  await wait(() => expect(setPollInstance).toBeCalledTimes(1));
+  await wait(() => expect(setPollInstance).toHaveBeenCalledWith(testValue));
 });
 

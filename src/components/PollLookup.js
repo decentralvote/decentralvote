@@ -24,7 +24,7 @@ function PollLookup(props) {
 
   const [
     pollAddress,
-    setpollAddress,
+    setPollAddress,
   ] = useState('');
 
   const classes = useStyles();
@@ -78,7 +78,7 @@ function PollLookup(props) {
             id="poll-address"
             name="poll-address"
             label="Set Poll Address"
-            onChange={e => setpollAddress(e.target.value)}
+            onChange={e => setPollAddress(e.target.value)}
             fullWidth
           />
         </Grid>
@@ -88,6 +88,7 @@ function PollLookup(props) {
                 variant="contained"
                 color="primary"
                 label="submit button"
+                id="submit button"
                 onClick={handleNext}
                 className={classes.button}
               >
