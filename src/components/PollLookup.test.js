@@ -1,7 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import PollLookup from './PollLookup';
+import {wait} from "@testing-library/user-event/dist/utils";
 
-const setPollAddress = jest.fn();
+
+const setPollInstance = jest.fn();
+const handleNext = jest.fn();
 
 test('renders a label and input', () => {
   render(<PollLookup />);
@@ -9,12 +12,35 @@ test('renders a label and input', () => {
   expect(labelElement).toBeInTheDocument();
 });
 
-test('lifts state up to parent', () => {
-  render(<PollLookup onLookup={setPollAddress} />);
+test('next button calls handle next', () => {
+  render(<PollLookup onLookup={setPollInstance} onNext={handleNext} />);
+  let button = screen.getByText('Next');
+  fireEvent.click(button);
+  expect(handleNext).toBeCalledTimes(1);
+});
+
+
+test('sets poll address', () => {
+  render(<PollLookup onLookup={setPollInstance} onNext={handleNext} />);
   let testValue = 'abc123';
   let inputElement = screen.getByLabelText('Set Poll Address *');
   fireEvent.change(inputElement, {target: {value: testValue}});
   expect(inputElement.value).toBe(testValue);
-  expect(setPollAddress).toBeCalledTimes(1);
-  expect(setPollAddress).toHaveBeenCalledWith(testValue);
 });
+
+test('lifts state up to parent', async () => {
+  window.ethereum = {request: function(){}};
+  render(<PollLookup onLookup={setPollInstance} onNext={handleNext} />);
+
+  let testValue = 'abc123';
+  let inputElement = screen.getByLabelText('Set Poll Address *');
+  let button = screen.getByText('Next');
+
+  fireEvent.change(inputElement, {target: {value: testValue}});
+  expect(inputElement.value).toBe(testValue);
+  fireEvent.click(button);
+
+  await wait(() => expect(setPollInstance).toBeCalledTimes(1));
+  await wait(() => expect(setPollInstance).toHaveBeenCalledWith(testValue));
+});
+
