@@ -1,13 +1,21 @@
 import {Button} from "@material-ui/core";
-import React from "react";
+import { useWeb3React } from '@web3-react/core';
 
 function Wallet(props) {
 
+  //onClick={this.walletConnectInit} fetching={fetching}
+
   return (
     <>
-      <Button variant="contained" color="primary" >
+      {!props.address ? (
+      <Button variant="contained" color="primary">
         Connect Wallet
       </Button>
+      ) : (
+        <Button variant="contained" color="primary">
+          {props.address}
+        </Button>
+      )}
     </>
   )
 }

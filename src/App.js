@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useState } from 'react';
 import Vote from './components/Vote';
 import Wallet from './components/Wallet';
 import Copyright from './components/Copyright';
@@ -9,6 +9,8 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import { useWeb3React } from '@web3-react/core';
+import { useEagerConnect, useInactiveListener } from './hooks';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -53,6 +55,15 @@ const useStyles = makeStyles((theme) => ({
 
 function App() {
   const classes = useStyles();
+
+  const context = useWeb3React();
+  const { connector, library, chainId, account, activate, deactivate, active, error } = context;
+
+  const [activatingConnector, setActivatingConnector] = useState();
+  const triedEager = useEagerConnect()
+
+  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
+  useInactiveListener(!triedEager || !!activatingConnector);
 
   return (
     <React.Fragment>
