@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import React from 'react';
-import { ethers } from 'ethers';
 import PollLookup from './PollLookup';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
@@ -8,8 +7,6 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import PollDisplay from "./PollDisplay";
-import DecentralPollContract
-  from "../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json";
 
 const steps = ['Poll Lookup', 'Poll Details', 'Submit Vote'];
 

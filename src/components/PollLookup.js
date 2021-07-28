@@ -4,6 +4,7 @@ import {ethers} from "ethers";
 import DecentralPollContract
   from "../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json";
 import Button from "@material-ui/core/Button";
+import {Alert} from '@material-ui/lab';
 import {makeStyles} from "@material-ui/core/styles";
 
 
@@ -13,6 +14,10 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end',
   },
   button: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+  },
+  alert: {
     marginTop: theme.spacing(3),
     marginLeft: theme.spacing(1),
   }
@@ -26,6 +31,15 @@ function PollLookup(props) {
     pollAddress,
     setPollAddress,
   ] = useState('');
+  const [
+    pollIsValid,
+    setPollIsValid
+  ] = useState(false);
+
+  const [
+    searched,
+    setSearched
+  ] = useState(false);
 
   const classes = useStyles();
 
@@ -56,17 +70,24 @@ function PollLookup(props) {
           voterCounts: voterCounts
         };
         onLookup(instanceData);
+        setPollIsValid(true);
+        setSearched(true);
         console.log('instance: ', instanceData);
+        return true;
       } catch (err) {
         console.log("Error: ", err);
+        setPollIsValid(false);
+        setSearched(true);
+        return false;
       }
     }
-
   }
 
-  function handleNext() {
-    fetchPoll(pollAddress);
-    props.onNext();
+  async function handleNext() {
+    const pollStatus = await fetchPoll(pollAddress);
+    if (pollStatus) {
+      props.onNext();
+    }
   }
 
   return (
@@ -83,16 +104,20 @@ function PollLookup(props) {
           />
         </Grid>
       </Grid>
+      <div className={classes.alert}>
+        {!pollIsValid && searched && <Alert severity="error">Could not find poll with that address</Alert>}
+      </div>
       <div className={classes.buttons}>
         <Button
                 variant="contained"
+                disabled={!pollAddress}
                 color="primary"
                 label="submit button"
                 id="submit button"
                 onClick={handleNext}
                 className={classes.button}
               >
-          Next
+          Search For Poll
         </Button>
       </div>
     </>
