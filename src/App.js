@@ -1,5 +1,4 @@
 import './App.css';
-import React, { useState } from 'react';
 import Vote from './components/Vote';
 import Wallet from './components/Wallet';
 import Copyright from './components/Copyright';
@@ -9,8 +8,9 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { useWeb3React } from '@web3-react/core';
-import { useEagerConnect, useInactiveListener } from './hooks';
+import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
+import { ethers } from "ethers";
+import { wc } from './helpers/WalletHelper';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -53,27 +53,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getLibrary(provider) {
+  return new ethers.providers.Web3Provider(provider);
+}
+
 function App() {
   const classes = useStyles();
 
-  const context = useWeb3React();
-  const { connector, library, chainId, account, activate, deactivate, active, error } = context;
-
-  const [activatingConnector, setActivatingConnector] = useState();
-  const triedEager = useEagerConnect()
-
-  // handle logic to connect in reaction to certain events on the injected ethereum provider, if it exists
-  useInactiveListener(!triedEager || !!activatingConnector);
-
   return (
-    <React.Fragment>
+    <Web3ReactProvider getLibrary={getLibrary}>
       <CssBaseline />
       <AppBar position="absolute" color="transparent" className={classes.appBar} elevation={0}>
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap className={classes.title}>
           ✓ decentralvote
           </Typography>
-          <Wallet />
+          <Wallet connector={wc} w3r={useWeb3React} />
         </Toolbar>
       </AppBar>
       <main className={classes.layout}>
@@ -82,7 +77,7 @@ function App() {
         </Paper>
         <Copyright />
       </main>
-    </React.Fragment>
+    </Web3ReactProvider>
   );
 }
 
