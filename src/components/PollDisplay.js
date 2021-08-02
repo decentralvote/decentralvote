@@ -9,6 +9,7 @@ import VoteCounts from "./VoteCounts";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Radio from "@material-ui/core/Radio";
 import {ethers} from "ethers";
+import {Alert} from "@material-ui/lab";
 
 function PollDisplay(props) {
 
@@ -21,57 +22,33 @@ function PollDisplay(props) {
   function ProposalList(props) {
     const proposals = props.proposals;
     return proposals.map((proposal, index) =>
-      <FormControlLabel value={index} control={<Radio />} label={ethers.utils.parseBytes32String(proposal)} />
+      <FormControlLabel checked={selectedVote === index} value={selectedVote} onChange={e => setSelectedVote(e.target.checked)} value={index} control={<Radio />} label={ethers.utils.parseBytes32String(proposal)} />
     );
-  }
 
   return (
     <div>
-      <Paper variant="outlined" style={{ padding: "16px" }}>
-        <Typography component="h2" variant="h6">
-          Poll Name
-        </Typography>
-        <Typography component="h3" variant="h6">
-          {props.instance.pollName}
-        </Typography>
-        <Typography component="h2" variant="h6">
-          Start Time
-        </Typography>
-        <Typography component="h3" variant="h6">
-          {props.instance.startTime.toString()}
-        </Typography>
-        <Typography component="h2" variant="h6">
-          End Time
-        </Typography>
-        <Typography component="h3" variant="h6">
-          {props.instance.endTime.toString()}
-        </Typography>
-      </Paper>
-      <h3>
-        Has Started?
-        {props.instance.hasPollStarted ? " Yes" : " No"}
-      </h3>
-      <h3>
-        Has Ended?
-        {props.instance.hasPollEnded ? " Yes" : " No"}
-      </h3>
-      <h3>Can Vote: {props.instance.canVote ? " Yes" : " No"}</h3>
+      {!props.instance.canVote &&
+        <Alert severity={"error"}>You are not eligible to vote in this poll.</Alert>
+      }
+      {props.instance.canVote &&
+        <div>
+          <h1>{props.instance.pollName}</h1>
+          <h3 style={{color: !props.instance.hasPollEnded ? "green" : "red" }}>{!props.instance.hasPollEnded ? "Active" : "Ended"}</h3>
 
-      <FormControl component="fieldset">
-        <FormLabel component="legend">Proposals</FormLabel>
-        <RadioGroup
-          aria-label="proposals"
-          name="proposals"
-          value={selectedVote}
-          onChange={e => setSelectedVote(e.target.value)}>
-          <ProposalList proposals={props.instance.proposals} />
-        </RadioGroup>
-      </FormControl>
-      <h3>You chose: {selectedVote}</h3>
-      <Button variant="contained" color="primary">
-        Vote!
-      </Button>
-      <VoteCounts counts={props.instance.voterCounts} proposals={props.instance.proposals} />
+          <FormControl component="fieldset">
+            <h2>Proposals:</h2>
+            <RadioGroup
+              aria-label="proposals"
+              name="proposals">
+              <ProposalList proposals={props.instance.proposals} />
+            </RadioGroup>
+          </FormControl>
+          <Button variant="contained" color="primary">
+            Vote!
+          </Button>
+          <VoteCounts counts={props.instance.voterCounts} proposals={props.instance.proposals} />
+        </div>
+      }
     </div>
   );
 }
