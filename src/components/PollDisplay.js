@@ -55,7 +55,7 @@ function PollDisplay(props) {
               value={selectedVote}
               onChange={handleChange}>
               <ProposalList proposals={props.instance.proposals}/>
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={props.onNext}>
                 Vote!
               </Button>
             </RadioGroup>
