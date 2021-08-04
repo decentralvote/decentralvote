@@ -7,6 +7,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import PollDisplay from "./PollDisplay";
+import { useWeb3React } from '@web3-react/core';
 
 const steps = ['Poll Lookup', 'Poll Details', 'Submit Vote'];
 
@@ -69,7 +70,7 @@ function Vote() {
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <PollLookup onLookup={setPollInstance} onNext={handleNext}/>;
+        return <PollLookup w3r={useWeb3React} onLookup={setPollInstance} onNext={handleNext}/>;
       case 1:
         return <PollDisplay instance={pollInstance} vote={sendVote} onNext={handleNext}/>;
       case 2:

@@ -1,6 +1,6 @@
 import './App.css';
-import React from 'react';
 import Vote from './components/Vote';
+import Wallet from './components/Wallet';
 import Copyright from './components/Copyright';
 import { makeStyles } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -8,10 +8,17 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
+import { ethers } from "ethers";
+import { wc } from './helpers/WalletHelper';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
     position: 'relative',
+  },
+  title: {
+    flexGrow: 1,
+    fontWeight: 900
   },
   layout: {
     width: 'auto',
@@ -46,17 +53,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function getLibrary(provider) {
+  return new ethers.providers.Web3Provider(provider);
+}
+
 function App() {
   const classes = useStyles();
 
   return (
-    <React.Fragment>
+    <Web3ReactProvider getLibrary={getLibrary}>
       <CssBaseline />
-      <AppBar position="absolute" color="default" className={classes.appBar}>
+      <AppBar position="absolute" color="transparent" className={classes.appBar} elevation={0}>
         <Toolbar>
-          <Typography variant="h6" color="inherit" noWrap>
-            decentralvote
+          <Typography variant="h6" color="inherit" noWrap className={classes.title}>
+          ✓ decentralvote
           </Typography>
+          <Wallet connector={wc} w3r={useWeb3React} />
         </Toolbar>
       </AppBar>
       <main className={classes.layout}>
@@ -65,7 +77,7 @@ function App() {
         </Paper>
         <Copyright />
       </main>
-    </React.Fragment>
+    </Web3ReactProvider>
   );
 }
 
