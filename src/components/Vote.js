@@ -71,9 +71,9 @@ function Vote() {
       case 0:
         return <PollLookup onLookup={setPollInstance} onNext={handleNext}/>;
       case 1:
-        return <PollDisplay instance={pollInstance} vote={sendVote}/>;
+        return <PollDisplay instance={pollInstance} vote={sendVote} onNext={handleNext}/>;
       case 2:
-        return <p>Nothing</p>;
+        return <p>Success!</p>;
       default:
         throw new Error('Unknown step');
     }
