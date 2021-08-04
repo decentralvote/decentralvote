@@ -8,17 +8,27 @@ import VoteCounts from "./VoteCounts";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {ethers} from "ethers";
 import {Alert} from "@material-ui/lab";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  buttons: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    marginTop: theme.spacing(1),
+    marginLeft: theme.spacing(1),
+  },
+}));
+
 
 function PollDisplay(props) {
 
-  const [
-    selectedVote,
-    setSelectedVote,
-  ] = useState(null);
-
+  const classes = useStyles();
 
   function ProposalList(props) {
     const proposals = props.proposals;
+    console.log(proposals);
     return proposals.map((proposal, index) =>
       <FormControlLabel value={index.toString()}
                         control={<Radio color={"default"}/>}
@@ -27,7 +37,7 @@ function PollDisplay(props) {
   }
 
   const handleChange = (e) => {
-    setSelectedVote(e.target.value);
+    props.selectVote(e.target.value);
   }
   return (
     <>
@@ -52,16 +62,23 @@ function PollDisplay(props) {
             <RadioGroup
               aria-label="proposals"
               name="proposals"
-              value={selectedVote}
+              value={props.selectedVote}
               onChange={handleChange}>
               <ProposalList proposals={props.instance.proposals}/>
-              <Button variant="contained" color="primary" onClick={props.onNext}>
-                Vote!
-              </Button>
+              {/*<p>You have chosen: {props.selectedVote ? ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote]) : "Nothing"}</p>*/}
+              {props.selectedVote ? <p>You have chosen: {ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote])}</p> : <p></p>}
             </RadioGroup>
           </FormControl>
-          <VoteCounts counts={props.instance.voterCounts}
-                      proposals={props.instance.proposals}/>
+          <div className={classes.buttons}>
+            <Button variant="contained" color="primary"
+                    disabled={!props.selectedVote}
+                    className={classes.button}
+                    onClick={props.onNext}>
+              Next Step
+            </Button>
+          </div>
+          {/*<VoteCounts counts={props.instance.voterCounts}*/}
+          {/*            proposals={props.instance.proposals}/>*/}
         </>
         }
       </>

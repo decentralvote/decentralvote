@@ -8,6 +8,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import PollDisplay from "./PollDisplay";
 import { useWeb3React } from '@web3-react/core';
+import PollSubmit from "./PollSubmit";
 
 const steps = ['Poll Lookup', 'Poll Details', 'Submit Vote'];
 
@@ -59,22 +60,28 @@ function Vote() {
 
   const [activeStep, setActiveStep] = useState(0);
 
+  const [
+    selectedVote,
+    setSelectedVote,
+  ] = useState(null);
+
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
 
-  // const handleBack = () => {
-  //   setActiveStep(activeStep - 1);
-  // };
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
 
   function getStepContent(step) {
     switch (step) {
       case 0:
         return <PollLookup w3r={useWeb3React} onLookup={setPollInstance} onNext={handleNext}/>;
       case 1:
-        return <PollDisplay instance={pollInstance} vote={sendVote} onNext={handleNext}/>;
+        return <PollDisplay instance={pollInstance} vote={sendVote} onNext={handleNext} selectedVote={selectedVote} selectVote={setSelectedVote}/>;
       case 2:
-        return <p>Success!</p>;
+        // Eventually add sendVote to onSubmit
+        return <PollSubmit instance={pollInstance} selectedVote={selectedVote} onBack={handleBack} onSubmit={() => console.log(selectedVote)}/>;
       default:
         throw new Error('Unknown step');
     }
