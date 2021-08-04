@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
-import VoteCounts from "./VoteCounts";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import {ethers} from "ethers";
 import {Alert} from "@material-ui/lab";
@@ -65,8 +64,6 @@ function PollDisplay(props) {
               value={props.selectedVote}
               onChange={handleChange}>
               <ProposalList proposals={props.instance.proposals}/>
-              {/*<p>You have chosen: {props.selectedVote ? ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote]) : "Nothing"}</p>*/}
-              {props.selectedVote ? <p>You have chosen: {ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote])}</p> : <p></p>}
             </RadioGroup>
           </FormControl>
           <div className={classes.buttons}>
@@ -77,8 +74,6 @@ function PollDisplay(props) {
               Next Step
             </Button>
           </div>
-          {/*<VoteCounts counts={props.instance.voterCounts}*/}
-          {/*            proposals={props.instance.proposals}/>*/}
         </>
         }
       </>
