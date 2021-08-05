@@ -53,7 +53,7 @@ function PollLookup(props) {
     return web3React.active;
   }
 
-  async function fetchPoll(address) {
+  let fetchPoll = props.fetchPoll || async function(address) {
     const pollContract = new ethers.Contract(address, DecentralPollContract.abi, web3React.library);
     try {
       let pollName = ethers.utils.parseBytes32String(await pollContract.getName());
@@ -63,7 +63,7 @@ function PollLookup(props) {
       let hasPollStarted = await pollContract.hasPollStarted();
       let hasPollEnded = await pollContract.hasPollEnded();
       let voterCounts = await pollContract.getVoterCounts();
-      let canVote = true;
+      let canVote = await pollContract.canVote(web3React.account);
       let instanceData = {
         address: pollAddress,
         pollName: pollName,
@@ -78,10 +78,8 @@ function PollLookup(props) {
       onLookup(instanceData);
       setPollIsValid(true);
       setSearched(true);
-      console.log('instance: ', instanceData);
       return true;
     } catch (err) {
-      console.log("Error: ", err);
       setPollIsValid(false);
       setSearched(true);
       return false;

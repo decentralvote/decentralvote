@@ -8,6 +8,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import PollDisplay from "./PollDisplay";
 import { useWeb3React } from '@web3-react/core';
+import PollSubmit from "./PollSubmit";
 
 const steps = ['Poll Lookup', 'Poll Details', 'Submit Vote'];
 
@@ -59,66 +60,31 @@ function Vote() {
 
   const [activeStep, setActiveStep] = useState(0);
 
+  const [
+    selectedVote,
+    setSelectedVote,
+  ] = useState(null);
+
   const handleNext = () => {
     setActiveStep(activeStep + 1);
   };
 
-  // const handleBack = () => {
-  //   setActiveStep(activeStep - 1);
-  // };
+  const handleBack = () => {
+    setActiveStep(activeStep - 1);
+  };
 
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <PollLookup w3r={useWeb3React} onLookup={setPollInstance} onNext={handleNext}/>;
+        return <PollLookup w3r={useWeb3React} onLookup={setPollInstance} onNext={handleNext} />;
       case 1:
-        return <PollDisplay instance={pollInstance} vote={sendVote} onNext={handleNext}/>;
+        return <PollDisplay instance={pollInstance} onNext={handleNext} selectedVote={selectedVote} selectVote={setSelectedVote}/>;
       case 2:
-        return <p>Success!</p>;
+        return <PollSubmit w3r={useWeb3React} instance={pollInstance} selectedVote={selectedVote} onBack={handleBack} onNext={handleNext} />;
       default:
         throw new Error('Unknown step');
     }
   }
-
-  function sendVote() {
-    console.log("send vote");
-  }
-// call the smart contract, send a vote
-// this makes a contract request, might be causing the issue
-//   async function sendVote(vote) {
-//     if (typeof window.ethereum !== 'undefined') {
-//       await window.ethereum.request({ method: 'eth_requestAccounts' });
-//       const provider = new ethers.providers.Web3Provider(window.ethereum);
-//       const signer = provider.getSigner();
-//       const pollContract = new ethers.Contract(pollInstance.address, DecentralPollContract.abi, signer);
-//       try {
-//         const transaction = await pollContract.vote(vote);
-//         await transaction.wait();
-//       } catch (err) {
-//         console.log("Error: ", err);
-//       }
-//     }
-//   }
-
-
-
-  // function BottomButtons() {
-  //   return <div className={classes.buttons}>
-  //     {activeStep !== 0 && (
-  //       <Button onClick={handleBack} className={classes.button}>
-  //         Back
-  //       </Button>
-  //     )}
-  //     <Button
-  //       variant="contained"
-  //       color="primary"
-  //       onClick={handleNext}
-  //       className={classes.button}
-  //     >
-  //       {activeStep === steps.length - 1 ? 'Place order' : 'Next'}
-  //     </Button>
-  //   </div>;
-  // }
 
   return (
     <>
@@ -135,52 +101,18 @@ function Vote() {
       <>
         {activeStep === steps.length ? (
           <>
-            <Typography variant="h5" gutterBottom>
-              Thank you for your order.
+            <Typography variant="h5" gutterBottom align="center">
+              Thank you for your vote.
             </Typography>
           </>
         ) : (
           <>
-              {getStepContent(activeStep)}
-            {/*<BottomButtons />*/}
+            {getStepContent(activeStep)}
           </>
         )}
       </>
     </>
   );
-
-  // return (
-  //   <Container maxWidth="sm">
-  //     <div className={classes.paper}>
-  //       <form className={classes.form} noValidate>
-  //       <Grid container spacing={2}>
-  //           <Grid item xs={12}>
-  //             <TextField
-  //               variant="outlined"
-  //               required
-  //               fullWidth
-  //               id="pollAddress"
-  //               label="Poll Address"
-  //               name="pollAddress"
-  //               value={pollAddress}
-  //               onChange={e => setPollAddress(e.target.value)}
-  //             />
-  //           </Grid>
-  //         </Grid>
-  //         <Button
-  //           fullWidth
-  //           variant="contained"
-  //           color="primary"
-  //           className={classes.submit}
-  //           onClick={fetchPoll}
-  //         >
-  //           Fetch Poll
-  //         </Button>
-  //       </form>
-  //       { details }
-  //     </div>
-  //   </Container>
-  // );
 }
 
 export default Vote;

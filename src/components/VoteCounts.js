@@ -15,16 +15,16 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function VoteCounts(props) {
-    let counts = props.counts;
-    let proposals = props.proposals;
+    let counts = props.instance.voterCounts;
+    let proposals = props.instance.proposals;
 
     const classes = useStyles();
 
     let items = counts.map((count, index) => {
         let label = `${ethers.utils.parseBytes32String(proposals[index])}`;
         let votes = `Votes: ${count.toString()}`;
-        return <ListItemLink>
-            <ListItemText primary={label} secondary={votes} />
+        return <ListItemLink key={index.toString()}>
+            <ListItemText primary={label} secondary={votes}/>
         </ListItemLink>
 
     });
