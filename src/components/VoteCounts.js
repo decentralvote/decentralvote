@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function VoteCounts(props) {
-    let counts = props.counts;
-    let proposals = props.proposals;
+    let counts = props.instance.voterCounts;
+    let proposals = props.instance.proposals;
 
     const classes = useStyles();
 

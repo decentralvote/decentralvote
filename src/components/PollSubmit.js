@@ -7,6 +7,9 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import DecentralPollContract
+  from '../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json';
+import VoteCounts from "./VoteCounts";
 
 const useStyles = makeStyles((theme) => ({
   buttons: {
@@ -32,6 +35,12 @@ function PollSubmit(props) {
 
   const [open, setOpen] = React.useState(false);
 
+  if (!props.w3r) {
+    throw new Error('Bad Poll Lookup Config');
+  }
+
+  const web3React = props.w3r();
+
   const handleClickOpen = () => {
     setOpen(true);
   };
@@ -41,9 +50,22 @@ function PollSubmit(props) {
   };
 
   const handleSubmit = () => {
-    props.onSubmit();
+    sendVote(props.selectedVote.toString());
     setOpen(false);
   };
+
+  async function sendVote(vote) {
+      const signer = web3React.library.getSigner(web3React.account);
+      const pollContract = new ethers.Contract(props.instance.address, DecentralPollContract.abi, signer);
+      try {
+        console.log()
+        const transaction = await pollContract.vote(vote);
+        await transaction.wait();
+      } catch (err) {
+        console.log("Error: ", err);
+      }
+  }
+
 
   return (
     <>
@@ -81,6 +103,7 @@ function PollSubmit(props) {
           </DialogActions>
         </Dialog>
       </div>
+      <VoteCounts instance={props.instance}/>
     </>
   );
 }

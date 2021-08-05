@@ -27,12 +27,15 @@ function PollDisplay(props) {
 
   function ProposalList(props) {
     const proposals = props.proposals;
-    console.log(proposals);
     return proposals.map((proposal, index) =>
       <FormControlLabel value={index.toString()}
                         control={<Radio color={"default"}/>}
                         label={ethers.utils.parseBytes32String(proposal)}/>
     );
+  }
+
+  const valid = () => {
+    return props.instance.canVote && !props.instance.hasPollEnded;
   }
 
   const handleChange = (e) => {
@@ -54,7 +57,7 @@ function PollDisplay(props) {
           <h4>{!props.instance.hasPollEnded ? "Ends" : "Ended"}: {props.instance.endTime.toString()}</h4>
         </>
 
-        {props.instance.canVote &&
+        {valid() &&
         <>
           <FormControl component="fieldset">
             <FormLabel component="legend">Proposals</FormLabel>
