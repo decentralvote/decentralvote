@@ -23,8 +23,8 @@ function VoteCounts(props) {
     let items = counts.map((count, index) => {
         let label = `${ethers.utils.parseBytes32String(proposals[index])}`;
         let votes = `Votes: ${count.toString()}`;
-        return <ListItemLink>
-            <ListItemText primary={label} secondary={votes} />
+        return <ListItemLink key={index.toString()}>
+            <ListItemText primary={label} secondary={votes}/>
         </ListItemLink>
 
     });

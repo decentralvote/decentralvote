@@ -30,6 +30,7 @@ function PollDisplay(props) {
     return proposals.map((proposal, index) =>
       <FormControlLabel value={index.toString()}
                         control={<Radio color={"default"}/>}
+                        key={index.toString()}
                         label={ethers.utils.parseBytes32String(proposal)}/>
     );
   }
