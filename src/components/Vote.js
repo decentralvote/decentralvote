@@ -76,16 +76,15 @@ function Vote() {
   function getStepContent(step) {
     switch (step) {
       case 0:
-        return <PollLookup w3r={useWeb3React} onLookup={setPollInstance} onNext={handleNext}/>;
+        return <PollLookup w3r={useWeb3React} onLookup={setPollInstance} onNext={handleNext} />;
       case 1:
         return <PollDisplay instance={pollInstance} onNext={handleNext} selectedVote={selectedVote} selectVote={setSelectedVote}/>;
       case 2:
-        return <PollSubmit w3r={useWeb3React} instance={pollInstance} selectedVote={selectedVote} onBack={handleBack} />;
+        return <PollSubmit w3r={useWeb3React} instance={pollInstance} selectedVote={selectedVote} onBack={handleBack} onNext={handleNext} />;
       default:
         throw new Error('Unknown step');
     }
   }
-
 
   return (
     <>
@@ -102,14 +101,13 @@ function Vote() {
       <>
         {activeStep === steps.length ? (
           <>
-            <Typography variant="h5" gutterBottom>
-              Thank you for your order.
+            <Typography variant="h5" gutterBottom align="center">
+              Thank you for your vote.
             </Typography>
           </>
         ) : (
           <>
-              {getStepContent(activeStep)}
-            {/*<BottomButtons />*/}
+            {getStepContent(activeStep)}
           </>
         )}
       </>

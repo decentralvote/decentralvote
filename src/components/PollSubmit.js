@@ -7,6 +7,8 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 import DecentralPollContract
   from '../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json';
 import VoteCounts from "./VoteCounts";
@@ -26,14 +28,18 @@ const useStyles = makeStyles((theme) => ({
   vote: {
     color: "green",
     fontSize: "larger",
-  }
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
 }));
-
 
 function PollSubmit(props) {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
+  const [openBackdrop, setOpenBackdrop] = React.useState(false);
 
   if (!props.w3r) {
     throw new Error('Bad Poll Lookup Config');
@@ -50,25 +56,33 @@ function PollSubmit(props) {
   };
 
   const handleSubmit = () => {
+    handleBackdropToggle();
     sendVote(props.selectedVote.toString());
     setOpen(false);
+  };
+
+  const handleBackdropToggle = () => {
+    setOpenBackdrop(!openBackdrop);
   };
 
   async function sendVote(vote) {
       const signer = web3React.library.getSigner(web3React.account);
       const pollContract = new ethers.Contract(props.instance.address, DecentralPollContract.abi, signer);
       try {
-        console.log()
         const transaction = await pollContract.vote(vote);
         await transaction.wait();
+        handleBackdropToggle();
+        props.onNext();
       } catch (err) {
         console.log("Error: ", err);
       }
   }
 
-
   return (
     <>
+      <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       <h3 className={classes.text}>You have chosen: <span className={classes.vote}>{props.selectedVote ? ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote]) : "Nothing"}</span></h3>
       <div className={classes.buttons}>
         <Button variant="contained"
