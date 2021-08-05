@@ -33,6 +33,9 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
+  backdropMessage: {
+    marginRight: "10px"
+  }
 }));
 
 function PollSubmit(props) {
@@ -81,6 +84,7 @@ function PollSubmit(props) {
   return (
     <>
       <Backdrop className={classes.backdrop} open={openBackdrop}>
+        <p className={classes.backdropMessage}>Waiting for transaction verification</p>
         <CircularProgress color="inherit" />
       </Backdrop>
       <h3 className={classes.text}>You have chosen: <span className={classes.vote}>{props.selectedVote ? ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote]) : "Nothing"}</span></h3>
