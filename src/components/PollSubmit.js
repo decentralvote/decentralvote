@@ -35,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: '#fff',
   },
-  theGrid: {
-    flexGrow: 1,
-  },
 }));
 
 function PollSubmit(props) {
@@ -120,7 +117,9 @@ function PollSubmit(props) {
           aria-labelledby="alert-dialog-title"
           aria-describedby="alert-dialog-description"
         >
-          <DialogTitle id="alert-dialog-title">{"Confirm vote"}</DialogTitle>
+          <DialogTitle id="alert-dialog-title">
+            Confirm vote
+          </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
               Are you sure you want to submit your vote for {ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote])}
