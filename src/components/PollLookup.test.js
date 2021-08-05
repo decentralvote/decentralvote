@@ -1,9 +1,9 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import PollLookup from './PollLookup';
 import { wait } from "@testing-library/user-event/dist/utils";
+import { act } from 'react-dom/test-utils';
 import { mockWeb3React } from '../helpers/TestHelpers';
 import { ethers } from 'ethers';
-
 
 const setPollInstance = jest.fn();
 const handleNext = jest.fn();
@@ -35,20 +35,23 @@ test('sets poll address', () => {
 
 test('lifts state up to parent', async () => {
   let mockW3r = mockWeb3React({
-    active:true,
+    active: true,
     library: ethers.getDefaultProvider()
   });
-  render(<PollLookup w3r={mockW3r} onLookup={setPollInstance} onNext={handleNext} />);
-
   let testValue = 'abc123';
+  let fetchPoll = jest.fn().mockReturnValue(true);
+  act(() => {
+    render(<PollLookup w3r={mockW3r} fetchPoll={fetchPoll} onLookup={setPollInstance} onNext={handleNext} />);
+  });
+
   let inputElement = screen.getByLabelText('Set Poll Address *');
   let button = screen.getByTestId(buttonTestId);
 
   fireEvent.change(inputElement, {target: {value: testValue}});
   expect(inputElement.value).toBe(testValue);
-  fireEvent.click(button);
+  act(() => {
+    fireEvent.click(button);
+  });
 
-  // await wait(() => expect(setPollInstance).toBeCalledTimes(1));
-  // await wait(() => expect(setPollInstance).toHaveBeenCalledWith(testValue));
+  expect(fetchPoll).toBeCalledTimes(1);
 });
-
