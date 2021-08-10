@@ -9,6 +9,8 @@ import {ethers} from "ethers";
 import {Alert} from "@material-ui/lab";
 import {makeStyles} from "@material-ui/core/styles";
 
+import {pollDisplayProps, proposalListProps} from "./pollTypes";
+
 const useStyles = makeStyles((theme) => ({
   buttons: {
     display: 'flex',
@@ -21,13 +23,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-function PollDisplay(props) {
+function PollDisplay(props: pollDisplayProps) {
 
   const classes = useStyles();
 
-  function ProposalList(props) {
+  function ProposalList(props: proposalListProps) {
     const proposals = props.proposals;
-    return proposals.map((proposal, index) =>
+    return proposals.map((proposal: string, index: number) =>
       <FormControlLabel value={index.toString()}
                         control={<Radio color={"default"}/>}
                         key={index.toString()}
@@ -39,7 +41,7 @@ function PollDisplay(props) {
     return props.instance.canVote && !props.instance.hasPollEnded;
   }
 
-  const handleChange = (e) => {
+  const handleChange = (e: any) => {
     props.selectVote(e.target.value);
   }
   return (
