@@ -14,6 +14,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import DecentralPollContract
   from '../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json';
 import VoteCounts from "./VoteCounts";
+import {pollSubmitProps} from "./pollTypes";
 
 const useStyles = makeStyles((theme) => ({
   buttons: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function PollSubmit(props) {
+function PollSubmit(props: pollSubmitProps) {
   const classes = useStyles();
 
   const [open, setOpen] = React.useState(false);
@@ -68,7 +69,7 @@ function PollSubmit(props) {
     setOpenBackdrop(!openBackdrop);
   };
 
-  async function sendVote(vote) {
+  async function sendVote(vote: string) {
       const signer = web3React.library.getSigner(web3React.account);
       const pollContract = new ethers.Contract(props.instance.address, DecentralPollContract.abi, signer);
       try {
