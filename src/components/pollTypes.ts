@@ -1,28 +1,35 @@
 
 export type pollDisplayProps = {
   instance: instanceType,
-  selectVote(value: any): () => any,
-  selectedVote: number,
-  onNext(): () => void,
+  selectVote(value: any): any,
+  selectedVote: number | null,
+  onNext(): void,
+}
+export type pollLookupProps = {
+  w3r: any,
+  onLookup(value: object): void,
+  onNext(): void,
+}
+
+export type pollSubmitProps = {
+  w3r: any,
+  instance: instanceType,
+  selectedVote: number | null,
+  onBack(): void,
+  onNext(): void,
 }
 
 export type proposalListProps = {
   proposals: any,
 }
 
-export type pollLookupProps = {
-  w3r: any,
-  onLookup(value: object):() => instanceType,
-  fetchPoll(value: string): () => instanceType,
-  onNext(): () => void,
+export type voteCountsProps = {
+  instance: instanceType,
 }
 
-export type pollSubmitProps = {
+export type walletProps = {
+  connector: any,
   w3r: any,
-  instance: instanceType,
-  selectedVote: number,
-  onBack(): () => void,
-  onNext(): () => void,
 }
 
 

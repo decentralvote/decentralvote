@@ -1,10 +1,8 @@
 export function mockConnector(config = {}) {
   let defaultConfig = {
     handleDisconnect() {
-
     },
     close() {
-
     }
   };
   return Object.assign(defaultConfig, config);
@@ -15,7 +13,7 @@ export function mockWeb3React(config = {}) {
   let defaultConfig = {
     account: '0x19dc3a6e475e90ae18a5b9865aba4812ecd22c33',
     active: false,
-    activate(connector, error) {
+    activate() {
       this.active = true;
     }
   };

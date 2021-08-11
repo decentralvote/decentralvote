@@ -73,7 +73,7 @@ function Vote() {
     setActiveStep(activeStep - 1);
   };
 
-  function getStepContent(step) {
+  function getStepContent(step: number) {
     switch (step) {
       case 0:
         return <PollLookup w3r={useWeb3React} onLookup={setPollInstance} onNext={handleNext} />;

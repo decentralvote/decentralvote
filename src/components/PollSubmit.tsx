@@ -61,7 +61,9 @@ function PollSubmit(props: pollSubmitProps) {
 
   const handleSubmit = () => {
     handleBackdropToggle();
-    sendVote(props.selectedVote.toString());
+    if(props.selectedVote !== null) {
+      sendVote(props.selectedVote.toString());
+    }
     setOpen(false);
   };
 
@@ -123,7 +125,7 @@ function PollSubmit(props: pollSubmitProps) {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Are you sure you want to submit your vote for {ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote])}
+              Are you sure you want to submit your vote for {ethers.utils.parseBytes32String(props.instance.proposals[props.selectedVote ? props.selectedVote : 0])}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
