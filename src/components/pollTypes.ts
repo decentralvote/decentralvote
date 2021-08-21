@@ -33,9 +33,9 @@ export type walletProps = {
 }
 
 
-type instanceType = {
+export type instanceType = {
   address: string,
-  pollName: string,
+  pollName: string | null,
   proposals: any[],
   startTime: string,
   endTime: string,
