@@ -1,50 +1,60 @@
 const { expect } = require("chai");
+const { advanceBlocks } = require("./helpers");
 
-describe("PublicPollBound", function () {
-  it("Should return the new greeting once it's changed", async function () {
+describe("PublicPollBound", () => {
 
-    // Constants
-    const zero = ethers.constants.Zero;
-    const one = ethers.constants.One;
-    const arrayofTwoZeros = [
-      zero,
-      zero
-    ];
-    const pollHasntStarted = "Poll hasn't started";
-    const hasntVotedYet = "Hasn't yet voted.";
+  // Constants
+  const zero = ethers.constants.Zero;
+  const one = ethers.constants.One;
+  const arrayofTwoZeros = [
+    zero,
+    zero
+  ];
+  let pollHasntStarted = "Poll hasn't started";
+  let hasntVotedYet = "Hasn't yet voted.";
+
+  // Get Signers
+  let owner, secondAddress;
+
+  // Membership Protocol Addresses
+  let protocolAddresses = [];
+
+  // Proposal Name Array
+  let proposalNames = [
+    ethers.utils.formatBytes32String("DV Proposal 1"),
+    ethers.utils.formatBytes32String("DV Proposal 2")
+  ];
+
+  // Voter Base Logic
+  let voterBaseLogic = ethers.utils.formatBytes32String("DV Voter Base Logic");
+
+  // Poll Name
+  let pollName = ethers.utils.formatBytes32String("DV Poll Name");
+
+  // Poll Type
+  let pollType = ethers.utils.formatBytes32String("DV Poll Type");
+
+  // Start Time
+  let presentTime, startTime;
+
+  // Duration
+  let duration = 1000;
+
+  // Contract variables
+  let PublicPollBoundContract, PublicPollBound;
+
+  beforeEach(async () => {
+    // Start Time
+    presentTime = (await ethers.provider.getBlock()).timestamp;
+    startTime = presentTime + 3;
 
     // Get Signers
-    const [owner, secondAddress] = await ethers.getSigners();
-
-    // Membership Protocol Addresses
-    const protocolAddresses = [];
-
-    // Proposal Name Array
-    const proposalNames = [
-      ethers.utils.formatBytes32String("DV Proposal 1"),
-      ethers.utils.formatBytes32String("DV Proposal 2")
-    ];
-
-    // Voter Base Logic
-    const voterBaseLogic = ethers.utils.formatBytes32String("DV Voter Base Logic");
-
-    // Poll Name
-    const pollName = ethers.utils.formatBytes32String("DV Poll Name");
-
-    // Poll Type
-    const pollType = ethers.utils.formatBytes32String("DV Poll Type");
-
-    // Start Time
-    const presentTime = (await ethers.provider.getBlock()).timestamp;
-    const startTime = presentTime + 3;
-
-    // Duration
-    const duration = 1000;
+    [owner, secondAddress] = await ethers.getSigners();
 
     // Deploy the contract
-    const PublicPollBoundContract = await ethers.getContractFactory("PublicPollBound");
+    PublicPollBoundContract = await ethers.getContractFactory("PublicPollBound");
 
-    const PublicPollBound = await PublicPollBoundContract.deploy(
+    PublicPollBound = await PublicPollBoundContract.deploy(
       protocolAddresses,
       proposalNames,
       voterBaseLogic,
@@ -55,7 +65,9 @@ describe("PublicPollBound", function () {
     );
 
     await PublicPollBound.deployed();
+  });
 
+  it("should return the correct values from instantiation", async () => {
     // Verify the various properties from construction
     expect(await PublicPollBound.getProposals()).to.deep.equal(proposalNames);
     expect(await PublicPollBound.getVoterBaseLogic()).to.equal(voterBaseLogic);
@@ -76,14 +88,23 @@ describe("PublicPollBound", function () {
 
     // Verify zero voter count
     expect(await PublicPollBound.getVoterCounts()).to.deep.equal(arrayofTwoZeros);
+  });
 
+  it("should revert when the poll has not started", async () => {
     // Try to vote and expect revert
     await expect(PublicPollBound.vote(zero)).to.be.revertedWith(pollHasntStarted);
+  });
 
+  it("should revert a revoke when the poll hasn't started", async () => {
     // Try to revoke vote and expect revert
-    await expect(PublicPollBound.revokeVote()).to.be.revertedWith(hasntVotedYet);
+    await expect(PublicPollBound.revokeVote()).to.be.revertedWith(pollHasntStarted);
+  });
 
-    // Verify poll has not started
+  it("should process a vote and emit an event as expected", async () => {
+    // Advance the blocks
+    await advanceBlocks(3);
+
+    // Verify poll has started
     expect(await PublicPollBound.hasPollStarted()).to.equal(true);
 
     // Vote for first proposal and verify cast vote event
@@ -97,6 +118,11 @@ describe("PublicPollBound", function () {
 
     // Verify winning proposal
     expect(await PublicPollBound.winningProposal()).to.deep.equal(zero);
+  });
+
+  it("should process a repeat vote and emit an event as expected", async () => {
+    // Advance the blocks
+    await advanceBlocks(3);
 
     // Try to vote again and verify tried to vote event
     await PublicPollBound.vote(zero);
