@@ -6,6 +6,7 @@ import DecentralPollContract
 import Button from '@material-ui/core/Button';
 import { Alert } from '@material-ui/lab';
 import { makeStyles } from '@material-ui/core/styles';
+import {pollLookupProps} from "./pollTypes";
 
 const useStyles = makeStyles((theme) => ({
   buttons: {
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function PollLookup(props) {
+function PollLookup(props: pollLookupProps) {
 
   if (!props.w3r) {
     throw new Error('Bad Poll Lookup Config');
@@ -30,7 +31,7 @@ function PollLookup(props) {
 
   const web3React = props.w3r();
 
-  const { onLookup } = props
+  const { onLookup } = props;
 
   const [
     pollAddress,
@@ -53,7 +54,7 @@ function PollLookup(props) {
     return web3React.active;
   }
 
-  let fetchPoll = props.fetchPoll || async function(address) {
+  let fetchPoll = props.fetchPoll ? props.fetchPoll : async function(address: string) {
     const pollContract = new ethers.Contract(address, DecentralPollContract.abi, web3React.library);
     try {
       let pollName = ethers.utils.parseBytes32String(await pollContract.getName());
@@ -116,7 +117,6 @@ function PollLookup(props) {
           variant="contained"
           disabled={!pollAddress || !walletConnected()}
           color="primary"
-          label="submit button"
           id="submit button"
           onClick={handleNext}
           className={classes.button}

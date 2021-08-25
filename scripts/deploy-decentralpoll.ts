@@ -1,8 +1,10 @@
+import {ethers} from "ethers";
+
 const hardhat = require("hardhat");
 
 async function main() {
   // Membership Protocol Addresses
-  const protocolAddresses = [];
+  const protocolAddresses: string[] = [];
 
   // Proposal Name Array
   const proposalNames = [

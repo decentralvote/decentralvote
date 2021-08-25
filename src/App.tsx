@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function getLibrary(provider) {
+function getLibrary(provider: any) {
   return new ethers.providers.Web3Provider(provider);
 }
 

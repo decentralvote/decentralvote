@@ -2,6 +2,7 @@ import {Button} from "@material-ui/core";
 import { UserRejectedRequestError  } from '@web3-react/walletconnect-connector';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
+import {walletProps} from "./pollTypes";
 
 const useStyles = makeStyles((theme) => ({
   address: {
@@ -9,7 +10,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Wallet(props) {
+function Wallet(props: walletProps) {
 
   if (!props.connector || !props.w3r) {
     throw new Error('Bad Wallet Config');
@@ -19,7 +20,7 @@ function Wallet(props) {
 
   const classes = useStyles();
 
-  function handleError(error) {
+  function handleError(error: any) {
     if (error instanceof UserRejectedRequestError) {
       props.connector.handleDisconnect();
     }
