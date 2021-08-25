@@ -39,7 +39,8 @@ test('lifts state up to parent', async () => {
     library: ethers.getDefaultProvider()
   });
   let testValue = 'abc123';
-  let fetchPoll = jest.fn().mockReturnValue(true);
+  let fetchPoll = jest.fn().mockResolvedValue(true);
+
   act(() => {
     render(<PollLookup w3r={mockW3r} fetchPoll={fetchPoll} onLookup={setPollInstance} onNext={handleNext} />);
   });
@@ -47,8 +48,12 @@ test('lifts state up to parent', async () => {
   let inputElement = screen.getByLabelText('Set Poll Address *');
   let button = screen.getByTestId(buttonTestId);
 
-  fireEvent.change(inputElement, {target: {value: testValue}});
+  act(() => {
+    fireEvent.change(inputElement, {target: {value: testValue}});
+  });
+
   expect(inputElement.value).toBe(testValue);
+
   act(() => {
     fireEvent.click(button);
   });
