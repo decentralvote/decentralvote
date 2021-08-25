@@ -1,14 +1,15 @@
-
 export type pollDisplayProps = {
   instance: instanceType,
   selectVote(value: any): any,
   selectedVote: number | null,
   onNext(): void,
 }
+
 export type pollLookupProps = {
   w3r: any,
   onLookup(value: object): void,
   onNext(): void,
+  fetchPoll?: any
 }
 
 export type pollSubmitProps = {
@@ -31,7 +32,6 @@ export type walletProps = {
   connector: any,
   w3r: any,
 }
-
 
 type instanceType = {
   address: string,
