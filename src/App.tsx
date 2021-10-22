@@ -10,7 +10,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
-import { wc } from './helpers/WalletHelper';
+import { injected } from './helpers/WalletHelper';
 
 const useStyles = makeStyles((theme) => ({
   appBar: {
@@ -68,7 +68,7 @@ function App() {
           <Typography variant="h6" color="inherit" noWrap className={classes.title}>
           ✓ decentralvote
           </Typography>
-          <Wallet connector={wc} w3r={useWeb3React} />
+          <Wallet connector={injected} w3r={useWeb3React} />
         </Toolbar>
       </AppBar>
       <main className={classes.layout}>
