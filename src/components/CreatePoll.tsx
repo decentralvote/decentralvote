@@ -57,26 +57,26 @@ export default function CreatePoll(props: createPollProps) {
     const proposalNames = proposals.map((value) => { return ethers.utils.formatBytes32String(value)});
 
     // Voter Base Logic
-    // keep this fixed
     const voterBaseLogic = ethers.utils.formatBytes32String("Default Voting");
 
     // Poll Name
     const pollName = ethers.utils.formatBytes32String(name);
 
     // Poll Type
-    // keep this fixed
     const pollType = ethers.utils.formatBytes32String("One Person One Vote");
 
     // Start Time
     // await ethers.provider.send("evm_mine", []);
     const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
-    const presentTime = (await provider.getBlock(1)).timestamp;
+    // @ts-ignore
+    const presentTime = (await provider.getBlock()).timestamp;
     const startTime = presentTime + 60;
 
     // Duration
-    const duration = 60 * 60 * 24 * 5;
+    const begin = new Date();
+    const duration = Math.floor((endDate.getTime() - begin.getTime())/ 1000);
+
     // We get the contract to deploy
-    // it will break if you are not connected
     const signer = web3React.library.getSigner(web3React.account);
     const pollContract = new ethers.ContractFactory(DecentralPollContract.abi, DecentralPollContract.bytecode, signer);
 
@@ -91,28 +91,29 @@ export default function CreatePoll(props: createPollProps) {
     );
 
     await DecentralPoll.deployed();
-
     setDeployedAddress(DecentralPoll.address);
-    console.log("DecentralPoll deployed to:", DecentralPoll.address);
   }
 
   return (
     <div>
-      <br />
-      <Typography align={"center"} variant={"h4"}>Create Poll</Typography>
-      <form className={classes.root} noValidate autoComplete="off">
-        <TextField required id="standard-required" label="Required" defaultValue="Poll Name" value={name} onChange={e => setName(e.target.value)}/>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <br />
-          <Typography variant={"h6"}>End Time:</Typography>
-          <CreatePollEndDate setDate={handleEndDateChange} date={endDate}/>
-          <Typography align={"left"} variant={"h6"}>Add Proposals:</Typography>
-          <ProposalsList proposals={proposals} setProposals={handleProposalChange} />
-        </MuiPickersUtilsProvider>
-      </form>
-      <br />
-      <Button variant={"contained"} color={"primary"} onClick={handleSubmit}>Submit Poll</Button>
-      {deployedAddress && <Typography variant={"h6"}>Your poll address is: <span color={"green"}>{deployedAddress}</span></Typography>}
+      {!web3React.active && <Typography align={"center"} variant={"h5"}>Connect wallet to create poll</Typography>}
+      {web3React.active && <>
+        <br />
+        <Typography align={"center"} variant={"h4"}>Create Poll</Typography>
+        <form className={classes.root} noValidate autoComplete="off">
+          <TextField required id="standard-required" label="Required" defaultValue="Poll Name" value={name} onChange={e => setName(e.target.value)}/>
+          <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <br />
+            <Typography variant={"h6"}>End Time:</Typography>
+            <CreatePollEndDate setDate={handleEndDateChange} date={endDate}/>
+            <Typography align={"left"} variant={"h6"}>Add Proposals:</Typography>
+            <ProposalsList proposals={proposals} setProposals={handleProposalChange} />
+          </MuiPickersUtilsProvider>
+        </form>
+        <br />
+        <Button variant={"contained"} color={"primary"} onClick={handleSubmit}>Submit Poll</Button>
+        {deployedAddress && <Typography variant={"h6"}>Your poll address is: <span color={"green"}>{deployedAddress}</span></Typography>}
+      </>}
     </div>
   );
 };
