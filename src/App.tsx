@@ -97,7 +97,7 @@ function App() {
       <main className={classes.layout}>
         <Paper className={classes.paper}>
           {onVote && <Vote/>}
-          {onCreatePoll && <CreatePoll/>}
+          {onCreatePoll && <CreatePoll w3r={useWeb3React}/>}
         </Paper>
         <Copyright />
       </main>

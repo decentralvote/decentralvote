@@ -8,9 +8,8 @@ import Typography from "@material-ui/core/Typography";
 import ProposalsList from "./ProposalsList";
 import CreatePollEndDate from "./CreatePollEndDate";
 import { ethers } from 'ethers';
-import {instanceType} from "./pollTypes";
-// this line causes error
-// const hardhat = require("hardhat");
+import DecentralPollContract
+  from '../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -23,45 +22,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-export default function CreatePoll() {
+interface createPollProps {
+  w3r: any,
+}
+
+export default function CreatePoll(props: createPollProps) {
 
   const classes = useStyles();
 
   const [name, setName] = React.useState<string>("Poll Name");
-  const [startDate] = React.useState<Date>(new Date());
   const [endDate, setEndDate] = React.useState<Date>(new Date());
   const [proposals, setProposals] = React.useState(["name"]);
-
-  const [
-    pollInstance,
-    setPollInstance
-  ] = React.useState<instanceType>({
-    address: "",
-    pollName: "No Poll",
-    proposals: [],
-    startTime: "",
-    endTime: "",
-    hasPollStarted: false,
-    hasPollEnded: false,
-    canVote: false,
-    voterCounts: []
-  });
-
+  const [deployedAddress, setDeployedAddress] = React.useState("");
+  const web3React = props.w3r();
 
 
   const handleSubmit = () => {
-    setPollInstance({
-      address: "1234",
-      pollName: name,
-      proposals: [],
-      // The string formats are likely not the same at this time
-      startTime: startDate.toString(),
-      endTime: endDate.toString(),
-      canVote: false,
-      hasPollEnded: false,
-      hasPollStarted: true,
-      voterCounts: []});
-
     createPoll().then(r => {console.log(r)});
   };
 
@@ -82,7 +58,7 @@ export default function CreatePoll() {
 
     // Voter Base Logic
     // keep this fixed
-    const voterBaseLogic = ethers.utils.formatBytes32String("National Voting");
+    const voterBaseLogic = ethers.utils.formatBytes32String("Default Voting");
 
     // Poll Name
     const pollName = ethers.utils.formatBytes32String(name);
@@ -100,11 +76,11 @@ export default function CreatePoll() {
     // Duration
     const duration = 60 * 60 * 24 * 5;
     // We get the contract to deploy
-    // this line needs to be fixed
-    // @ts-ignore
-    const DecentralPollContract = await hardhat.ethers.getContractFactory("DecentralPoll");
+    // it will break if you are not connected
+    const signer = web3React.library.getSigner(web3React.account);
+    const pollContract = new ethers.ContractFactory(DecentralPollContract.abi, DecentralPollContract.bytecode, signer);
 
-    const DecentralPoll = await DecentralPollContract.deploy(
+    const DecentralPoll = await pollContract.deploy(
       protocolAddresses,
       proposalNames,
       voterBaseLogic,
@@ -116,6 +92,7 @@ export default function CreatePoll() {
 
     await DecentralPoll.deployed();
 
+    setDeployedAddress(DecentralPoll.address);
     console.log("DecentralPoll deployed to:", DecentralPoll.address);
   }
 
@@ -135,6 +112,7 @@ export default function CreatePoll() {
       </form>
       <br />
       <Button variant={"contained"} color={"primary"} onClick={handleSubmit}>Submit Poll</Button>
+      {deployedAddress && <Typography variant={"h6"}>Your poll address is: <span color={"green"}>{deployedAddress}</span></Typography>}
     </div>
   );
 };
