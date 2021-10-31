@@ -31,7 +31,7 @@ function PollLookup(props: pollLookupProps) {
 
   const web3React = props.w3r();
 
-  const { onLookup } = props
+  const { onLookup } = props;
 
   const [
     pollAddress,
@@ -54,7 +54,7 @@ function PollLookup(props: pollLookupProps) {
     return web3React.active;
   }
 
-  let fetchPoll = async function(address: string) {
+  let fetchPoll = props.fetchPoll ? props.fetchPoll : async function(address: string) {
     const pollContract = new ethers.Contract(address, DecentralPollContract.abi, web3React.library);
     try {
       let pollName = ethers.utils.parseBytes32String(await pollContract.getName());

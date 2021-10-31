@@ -11,7 +11,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import { Web3ReactProvider, useWeb3React } from '@web3-react/core';
 import { ethers } from "ethers";
-import { wc } from './helpers/WalletHelper';
+import {injected} from './helpers/WalletHelper';
 import {Badge, IconButton} from "@material-ui/core";
 import CreateIcon from '@material-ui/icons/Create';
 import HowToVoteIcon from '@material-ui/icons/HowToVote';
@@ -79,19 +79,19 @@ function App() {
       <AppBar position="absolute" color="transparent" className={classes.appBar} elevation={0}>
         <Toolbar>
           <Typography variant="h6" color="inherit" noWrap className={classes.title}>
-          ✓ decentralvote
+            ✓ decentralvote
           </Typography>
           <IconButton className={classes.createButton} aria-label="create poll" color="inherit" onClick={handleCreateClick}>
             <Badge color="secondary">
               <CreateIcon />
             </Badge>
           </IconButton>
-            <IconButton className={classes.voteButton} aria-label="create poll" color="inherit" onClick={handleVoteClick}>
-              <Badge color="secondary">
-                <HowToVoteIcon />
-              </Badge>
-            </IconButton>
-          <Wallet connector={wc} w3r={useWeb3React} />
+          <IconButton className={classes.voteButton} aria-label="create poll" color="inherit" onClick={handleVoteClick}>
+            <Badge color="secondary">
+              <HowToVoteIcon />
+            </Badge>
+          </IconButton>
+          <Wallet connector={injected} w3r={useWeb3React} />
         </Toolbar>
       </AppBar>
       <main className={classes.layout}>
