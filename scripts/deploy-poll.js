@@ -1,4 +1,5 @@
 const hardhat = require("hardhat");
+const {ethers} = require("ethers");
 
 async function main() {
   // Membership Protocol Addresses
@@ -11,12 +12,14 @@ async function main() {
   ];
 
   // Voter Base Logic
+  // keep this fixed
   const voterBaseLogic = ethers.utils.formatBytes32String("National Voting");
 
   // Poll Name
   const pollName = ethers.utils.formatBytes32String("2012 US Presidential Election");
 
   // Poll Type
+  // keep this fixed
   const pollType = ethers.utils.formatBytes32String("One Person One Vote");
 
   // Start Time

@@ -1,5 +1,7 @@
 require('dotenv').config();
 require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-ethers");
+
 
 const { ALCHEMY_API_KEY_ROPSTEN, ALCHEMY_API_KEY_RINKEBY, PRIVATE_KEY } = process.env;
 
@@ -17,11 +19,11 @@ module.exports = {
     },
     ropsten: {
       url: ALCHEMY_API_KEY_ROPSTEN,
-      accounts: [`0x${PRIVATE_KEY}`]
+      accounts: [`${PRIVATE_KEY}`]
     },
     rinkeby: {
       url: ALCHEMY_API_KEY_RINKEBY,
-      accounts: [`0x${PRIVATE_KEY}`]
+      accounts: [`${PRIVATE_KEY}`]
     }
   }
 };

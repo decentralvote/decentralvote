@@ -1,3 +1,5 @@
+import { Optional } from 'utility-types';
+
 export type pollDisplayProps = {
   instance: instanceType,
   selectVote(value: any): any,
@@ -20,9 +22,10 @@ export type pollSubmitProps = {
   onNext(): void,
 }
 
-export type proposalListProps = {
+export type proposalListProps = Optional<{
   proposals: any,
-}
+  setProposals: any,
+}, 'setProposals'>;
 
 export type voteCountsProps = {
   instance: instanceType,
@@ -33,7 +36,18 @@ export type walletProps = {
   w3r: any,
 }
 
-type instanceType = {
+export type createPollEndDateProps = {
+  date: any,
+  setDate: any,
+}
+
+export type deleteDialogProps = {
+  handleClose(): void,
+  open: boolean,
+
+}
+
+export type instanceType = {
   address: string,
   pollName: string,
   proposals: any[],
