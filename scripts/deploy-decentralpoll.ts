@@ -23,6 +23,7 @@ async function main() {
 
   // Start Time
   // await ethers.provider.send("evm_mine", []);
+  // @ts-ignore
   const presentTime = (await ethers.provider.getBlock()).timestamp;
   const startTime = presentTime + 60;
 

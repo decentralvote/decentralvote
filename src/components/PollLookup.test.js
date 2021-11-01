@@ -1,6 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import PollLookup from './PollLookup';
-import { wait } from "@testing-library/user-event/dist/utils";
 import { act } from 'react-dom/test-utils';
 import { mockWeb3React } from '../helpers/TestHelpers';
 import { ethers } from 'ethers';
