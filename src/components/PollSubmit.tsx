@@ -11,8 +11,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import Backdrop from '@material-ui/core/Backdrop';
 import Typography from '@material-ui/core/Typography';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import DecentralPollContract
-  from '../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json';
+import PublicPollBoundContract
+  from '../artifacts/contracts/PublicPollBound.sol/PublicPollBound.json';
 import VoteCounts from "./VoteCounts";
 import {pollSubmitProps} from "./pollTypes";
 
@@ -73,7 +73,7 @@ function PollSubmit(props: pollSubmitProps) {
 
   async function sendVote(vote: string) {
       const signer = web3React.library.getSigner(web3React.account);
-      const pollContract = new ethers.Contract(props.instance.address, DecentralPollContract.abi, signer);
+      const pollContract = new ethers.Contract(props.instance.address, PublicPollBoundContract.abi, signer);
       try {
         const transaction = await pollContract.vote(vote);
         setBdMessage('Recording your vote...');

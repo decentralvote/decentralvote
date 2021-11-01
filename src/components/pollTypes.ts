@@ -36,7 +36,7 @@ export type walletProps = {
   w3r: any,
 }
 
-export type createPollEndDateProps = {
+export type createPollDateProps = {
   date: any,
   setDate: any,
 }

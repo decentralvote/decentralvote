@@ -1,10 +1,9 @@
 import * as React from 'react';
 import Grid from "@material-ui/core/Grid";
 import {KeyboardDatePicker, KeyboardTimePicker} from "@material-ui/pickers";
-import { createPollEndDateProps } from './pollTypes';
+import { createPollDateProps } from './pollTypes';
 
-export default function CreatePollEndDate(props: createPollEndDateProps) {
-
+export default function CreatePollDate(props: createPollDateProps) {
 
   return (
     <Grid container justifyContent="space-around">

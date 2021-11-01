@@ -16,11 +16,25 @@ import {
 } from '@mui/material';
 import { Delete } from '@material-ui/icons';
 import {proposalListProps} from "./pollTypes";
+import {makeStyles} from "@material-ui/core/styles";
+
+const useStyles = makeStyles((theme) => ({
+  buttons: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+  },
+}));
 
 export default function ProposalsList(props: proposalListProps) {
 
   const [name, setName] = React.useState<string>("");
   const [alertOpen, setAlertOpen] = React.useState(false);
+
+  const classes = useStyles();
 
 
   const handleAdd = () => {
@@ -49,26 +63,30 @@ export default function ProposalsList(props: proposalListProps) {
     }
   }
   return (
-    <div>
+    <>
       <List>
-        {props.proposals.map((value: string, index: React.Key | null | undefined) => {
+        {props.proposals && <>
+          {props.proposals.map((value: string, index: React.Key | null | undefined) => {
           const labelId = `checkbox-list-label-${value}`;
           return (<>
-            {props.proposals.length >= 1 && <ListItem
-              key={index}
-            >
-              <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="comments">
-                  <Delete/>
-                </IconButton>
-              </ListItemSecondaryAction>
-              <ListItemButton role={undefined} onClick={() => {handleRemove(value)}} dense>
-                <ListItemText id={labelId} primary={`${value}`} />
-              </ListItemButton>
-            </ListItem>}
+              {props.proposals.length >= 1 && <ListItem
+                key={index}
+              >
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="comments">
+                    <Delete/>
+                  </IconButton>
+                </ListItemSecondaryAction>
+                <ListItemButton role={undefined} onClick={() => {handleRemove(value)}} dense>
+                  <ListItemText id={labelId} primary={`${value}`} />
+                </ListItemButton>
+              </ListItem>}
             </>
           );
         })}
+        </>
+        }
+
         <Collapse in={alertOpen}>
           <Alert
             severity={"warning"}
@@ -89,10 +107,11 @@ export default function ProposalsList(props: proposalListProps) {
             Proposal already entered!
           </Alert>
         </Collapse>
-        <TextField required id="standard-required" label={"Enter Proposal Name"} defaultValue="Add proposal" value={name} onKeyDown={handleKeyDown} onChange={e => setName(e.target.value)}/>
-        <Button variant={"contained"} color={"primary"} onClick={handleAdd}>Add</Button>
+        <TextField required fullWidth id="standard-required" label={"Enter Proposal Name"} defaultValue="Add proposal" value={name} onKeyDown={handleKeyDown} onChange={e => setName(e.target.value)}/>
+        <div className={classes.buttons}>
+          <Button className={classes.button} variant={"outlined"} color={"primary"} onClick={handleAdd}>Add Proposal</Button>
+        </div>
       </List>
-
-    </div>
+    </>
   );
 };

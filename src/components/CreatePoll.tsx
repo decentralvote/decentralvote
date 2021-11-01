@@ -1,22 +1,29 @@
 import * as React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {Button, TextField} from "@material-ui/core";
+import {Button, Grid, TextField} from "@material-ui/core";
 import DateFnsUtils from '@date-io/date-fns';
 import 'date-fns';
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import Typography from "@material-ui/core/Typography";
 import ProposalsList from "./ProposalsList";
-import CreatePollEndDate from "./CreatePollEndDate";
-import { ethers } from 'ethers';
-import DecentralPollContract
-  from '../artifacts/contracts/DecentralPoll.sol/DecentralPoll.json';
+import {BigNumber, ethers} from 'ethers';
+import PublicPollBoundContract
+  from '../artifacts/contracts/PublicPollBound.sol/PublicPollBound.json';
+import CreatePollDate from "./CreatePollDate";
 
 
 const useStyles = makeStyles((theme) => ({
+  buttons: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  button: {
+    marginTop: theme.spacing(3),
+    marginLeft: theme.spacing(1),
+  },
   root: {
     '& .MuiTextField-root': {
       margin: theme.spacing(1),
-      width: '25ch',
     },
   },
 }));
@@ -30,24 +37,30 @@ export default function CreatePoll(props: createPollProps) {
 
   const classes = useStyles();
 
-  const [name, setName] = React.useState<string>("Poll Name");
+  const [name, setName] = React.useState<string>("");
+  const [startDate, setStartDate] = React.useState<Date>(new Date());
   const [endDate, setEndDate] = React.useState<Date>(new Date());
-  const [proposals, setProposals] = React.useState(["name"]);
+  const [proposals, setProposals] = React.useState([]);
   const [deployedAddress, setDeployedAddress] = React.useState("");
   const web3React = props.w3r();
 
 
-  const handleSubmit = () => {
-    createPoll().then(r => {console.log(r)});
+  const handleSubmit = async () => {
+    await createPoll();
   };
 
   const handleEndDateChange = (date: any) => {
     setEndDate(date);
   };
 
+  const handleStartDateChange = (date: any) => {
+    setStartDate(date);
+  };
+
   const handleProposalChange = (list: any) => {
     setProposals(list);
   };
+
 
   const createPoll = async () => {
     // Membership Protocol Addresses
@@ -65,22 +78,20 @@ export default function CreatePoll(props: createPollProps) {
     // Poll Type
     const pollType = ethers.utils.formatBytes32String("One Person One Vote");
 
-    // Start Time
-    // await ethers.provider.send("evm_mine", []);
-    const provider = new ethers.providers.JsonRpcProvider("http://127.0.0.1:8545/");
-    // @ts-ignore
-    const presentTime = (await provider.getBlock()).timestamp;
-    const startTime = presentTime + 60;
 
     // Duration
-    const begin = new Date();
-    const duration = Math.floor((endDate.getTime() - begin.getTime())/ 1000);
+    const start = BigNumber.from(startDate.getTime());
+    const end = BigNumber.from(endDate.getTime());
+    const duration: BigNumber = end.sub(start).div(1000);
+
+    // Start Time
+    const startTime = start.div(1000);
 
     // We get the contract to deploy
     const signer = web3React.library.getSigner(web3React.account);
-    const pollContract = new ethers.ContractFactory(DecentralPollContract.abi, DecentralPollContract.bytecode, signer);
+    const pollContract = new ethers.ContractFactory(PublicPollBoundContract.abi, PublicPollBoundContract.bytecode, signer);
 
-    const DecentralPoll = await pollContract.deploy(
+    const PublicPoll = await pollContract.deploy(
       protocolAddresses,
       proposalNames,
       voterBaseLogic,
@@ -90,30 +101,39 @@ export default function CreatePoll(props: createPollProps) {
       duration
     );
 
-    await DecentralPoll.deployed();
-    setDeployedAddress(DecentralPoll.address);
+    await PublicPoll.deployed();
+    setDeployedAddress(PublicPoll.address);
   }
 
   return (
-    <div>
+    <>
       {!web3React.active && <Typography align={"center"} variant={"h5"}>Connect wallet to create poll</Typography>}
+
       {web3React.active && <>
-        <br />
-        <Typography align={"center"} variant={"h4"}>Create Poll</Typography>
-        <form className={classes.root} noValidate autoComplete="off">
-          <TextField required id="standard-required" label="Required" defaultValue="Poll Name" value={name} onChange={e => setName(e.target.value)}/>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <br />
-            <Typography variant={"h6"}>End Time:</Typography>
-            <CreatePollEndDate setDate={handleEndDateChange} date={endDate}/>
-            <Typography align={"left"} variant={"h6"}>Add Proposals:</Typography>
-            <ProposalsList proposals={proposals} setProposals={handleProposalChange} />
-          </MuiPickersUtilsProvider>
-        </form>
-        <br />
-        <Button variant={"contained"} color={"primary"} onClick={handleSubmit}>Submit Poll</Button>
-        {deployedAddress && <Typography variant={"h6"}>Your poll address is: <span color={"green"}>{deployedAddress}</span></Typography>}
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <Typography align={"center"} component="h1" variant={"h4"}>Create Poll</Typography>
+            <form className={classes.root} noValidate autoComplete="off">
+              <TextField required fullWidth id="standard-required" label="Poll name" value={name} onChange={e => setName(e.target.value)}/>
+
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <Typography variant={"h6"}>Start Time:</Typography>
+                {startDate.getTime()}
+                <CreatePollDate setDate={handleStartDateChange} date={startDate}/>
+                <Typography variant={"h6"}>End Time:</Typography>
+                {endDate.getTime()}
+                <CreatePollDate setDate={handleEndDateChange} date={endDate}/>
+                <Typography align={"left"} variant={"h6"}>Add Proposals:</Typography>
+                <ProposalsList proposals={proposals} setProposals={handleProposalChange} />
+              </MuiPickersUtilsProvider>
+            </form>
+            <div className={classes.buttons}>
+              <Button className={classes.button} variant={"contained"} color={"primary"} onClick={handleSubmit}>Create Poll</Button>
+            </div>
+            {deployedAddress && <Typography variant={"h6"}>Your poll address is: <span color={"green"}>{deployedAddress}</span></Typography>}
+          </Grid>
+        </Grid>
       </>}
-    </div>
+    </>
   );
 };
